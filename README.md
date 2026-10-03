@@ -14,8 +14,11 @@ App para administrar cuentas de streaming compartidas entre varias personas: pla
 
 ```bash
 npm install
+cp .env.example .env
 npm run dev
 ```
+
+`.env` define `VITE_API_BASE_URL` (la URL base del backend); `.env.example` documenta la variable y sí se versiona, `.env` no (está en `.gitignore`). Si tu backend corre en otro host/puerto, edita `VITE_API_BASE_URL` en tu `.env` local.
 
 Abre `http://localhost:5173`. Asegúrate de que tu backend esté corriendo en `http://localhost:8080` y que **CORS** permita peticiones desde `http://localhost:5173` (si usas Spring Boot, un `@CrossOrigin` o una `WebMvcConfigurer` global suele bastar).
 
@@ -29,7 +32,7 @@ src/
     ui/           -> Button, Modal, Field, Badge, Spinner, EmptyState, ConfirmDialog
     crud/         -> DataTable + EntityCrudPage (motor genérico de CRUD)
   pages/          -> una página por tabla, cada una solo define columnas y campos
-  config.js       -> URL base y rutas del backend (único archivo a tocar si cambian)
+  config.js       -> lee la URL base desde .env y define las rutas de cada entidad
   nav.js          -> menú de navegación
 ```
 
@@ -48,7 +51,7 @@ es un componente más, no un framework.
 
 ## Endpoints usados
 
-Base: `http://localhost:8080/api/v1` (confirmado contra tu Swagger).
+Base: `VITE_API_BASE_URL` en tu `.env` (por defecto `http://localhost:8080/api/v1`, confirmado contra tu Swagger).
 
 | Entidad             | Ruta                        |
 |---------------------|-----------------------------|

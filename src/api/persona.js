@@ -16,4 +16,8 @@ personaApi.getByIdentificacion = async (identificacion) => {
   );
   return data;
 };
+personaApi.contar = async () => {
+  const { data } = await axiosClient.get(`${ENDPOINTS.persona}/contar`);
+  return data;
+};
 export default personaApi;

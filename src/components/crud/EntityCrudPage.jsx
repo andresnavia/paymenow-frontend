@@ -140,7 +140,6 @@ export default function EntityCrudPage({
 
   const handleChange = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
-    setFormErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   const validate = () => {

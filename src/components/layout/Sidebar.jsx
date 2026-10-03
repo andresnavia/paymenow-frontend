@@ -1,8 +1,13 @@
 import { NavLink } from 'react-router-dom'
-import { Waves } from 'lucide-react'
+import { Waves, LogOut } from 'lucide-react'
+import { signOut } from 'firebase/auth'
+import { auth } from '../../firebase'
+import { useAuth } from '../../context/useAuth'
 import { NAV_ITEMS } from '../../nav'
 
 export default function Sidebar() {
+  const { user } = useAuth()
+
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-navy-950 text-white lg:flex">
       <div className="flex items-center gap-2 px-6 py-6">
@@ -35,8 +40,16 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-navy-900 px-6 py-4 text-xs text-brand-300/70">
-        Conectado a localhost:8080
+      <div className="border-t border-navy-900 px-6 py-4">
+        {user?.email && (
+          <p className="truncate text-xs text-brand-300/70">{user.email}</p>
+        )}
+        <button
+          onClick={() => signOut(auth)}
+          className="mt-2 flex items-center gap-2 text-xs font-medium text-brand-100/80 hover:text-white"
+        >
+          <LogOut size={14} /> Cerrar sesión
+        </button>
       </div>
     </aside>
   )

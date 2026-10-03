@@ -1,36 +1,50 @@
-import { useEffect, useState } from 'react'
-import { Tv, Wallet, Users, Receipt } from 'lucide-react'
-import plataformaApi from '../api/plataforma'
-import cuentaApi from '../api/cuenta'
-import personaApi from '../api/persona'
-import pagosApi from '../api/pagos'
-import Spinner from '../components/ui/Spinner'
+import { useEffect, useState } from "react";
+import { Tv, Wallet, Users, Receipt } from "lucide-react";
+import plataformaApi from "../api/plataforma";
+import cuentaApi from "../api/cuenta";
+import personaApi from "../api/persona";
+import pagosApi from "../api/pagos";
+import Spinner from "../components/ui/Spinner";
 
 const CARDS = [
-  { key: 'plataformas', label: 'Plataformas activas', icon: Tv, api: plataformaApi },
-  { key: 'cuentas', label: 'Cuentas registradas', icon: Wallet, api: cuentaApi },
-  { key: 'personas', label: 'Personas', icon: Users, api: personaApi },
-  { key: 'pagos', label: 'Pagos registrados', icon: Receipt, api: pagosApi },
-]
+  {
+    key: "plataformas",
+    label: "Plataformas activas",
+    icon: Tv,
+    api: plataformaApi,
+  },
+  {
+    key: "cuentas",
+    label: "Cuentas registradas",
+    icon: Wallet,
+    api: cuentaApi,
+  },
+  { key: "personas", label: "Personas", icon: Users, api: personaApi },
+  { key: "pagos", label: "Pagos registrados", icon: Receipt, api: pagosApi },
+];
 
 export default function Dashboard() {
-  const [counts, setCounts] = useState(null)
-  const [error, setError] = useState('')
+  const [counts, setCounts] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    let active = true
-    Promise.all(CARDS.map((c) => c.api.getAll().catch(() => [])))
+    let active = true;
+    Promise.all(CARDS.map((c) => c.api.contar().catch(() => [])))
       .then((results) => {
-        if (!active) return
+        if (!active) return;
         setCounts(
-          Object.fromEntries(CARDS.map((c, i) => [c.key, results[i]?.length ?? 0])),
-        )
+          Object.fromEntries(
+            CARDS.map((c, i) => [c.key, results[i]?.cantidad ?? 0]),
+          ),
+        );
       })
-      .catch(() => setError('No se pudo conectar con el backend en localhost:8080.'))
+      .catch(() =>
+        setError("No se pudo conectar con el backend en localhost:8080."),
+      );
     return () => {
-      active = false
-    }
-  }, [])
+      active = false;
+    };
+  }, []);
 
   return (
     <div>
@@ -60,7 +74,7 @@ export default function Dashboard() {
                 </span>
               </div>
               <p className="mt-4 font-display text-3xl text-navy-950">
-                {counts?.[key] ?? '—'}
+                {counts?.[key] ?? "—"}
               </p>
               <p className="mt-1 text-sm text-ink/60">{label}</p>
             </div>
@@ -69,13 +83,16 @@ export default function Dashboard() {
       )}
 
       <div className="mt-8 rounded-xl border border-brand-100 bg-white p-6 shadow-card">
-        <h2 className="text-base font-semibold text-navy-950">Cómo está organizada la app</h2>
+        <h2 className="text-base font-semibold text-navy-950">
+          Cómo está organizada la app
+        </h2>
         <p className="mt-2 text-sm text-ink/70">
-          Cada sección del menú corresponde a una tabla de la base de datos PayMeNow:
-          plataformas de streaming, las cuentas que se contratan en ellas, las personas
-          asociadas a cada cuenta compartida, y el historial de pagos con su estado.
+          Cada sección del menú corresponde a una tabla de la base de datos
+          PayMeNow: plataformas de streaming, las cuentas que se contratan en
+          ellas, las personas asociadas a cada cuenta compartida, y el historial
+          de pagos con su estado.
         </p>
       </div>
     </div>
-  )
+  );
 }
