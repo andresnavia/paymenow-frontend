@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Waves } from "lucide-react";
 import Button from "../components/ui/Button";
 import tiposIdentificacionApi from "../api/tiposIdentificacion";
@@ -54,7 +54,22 @@ const fields = [
     required: true,
     fullWidth: true,
   },
+  {
+    name: "password",
+    label: "Contraseña",
+    type: "password",
+    required: true,
+  },
+  {
+    name: "confirmPassword",
+    label: "Confirmar contraseña",
+    type: "password",
+    required: true,
+  },
 ];
+const selectFields = fields.filter(
+  (f) => f.type === "select" && f.optionsSource,
+);
 const emptyFormFrom = (fields) =>
   fields.reduce((acc, f) => ({ ...acc, [f.name]: f.defaultValue ?? "" }), {});
 export default function RegisterPage() {
@@ -63,21 +78,53 @@ export default function RegisterPage() {
   const [optionsMap, setOptionsMap] = useState({});
   const [form, setForm] = useState(() => emptyFormFrom(fields));
 
+  useEffect(() => {
+    const cargar = async () => {
+      const entries = await Promise.all(
+        selectFields.map(async (f) => {
+          try {
+            const data = await f.optionsSource.api.getAll();
+            const options = (data ?? []).map((item) => ({
+              value: item[f.optionsSource.valueKey],
+              label: f.optionsSource.getLabel(item),
+            }));
+            return [f.name, options];
+          } catch {
+            return [f.name, []];
+          }
+        }),
+      );
+      setOptionsMap(Object.fromEntries(entries));
+    };
+    cargar();
+  }, []);
+
   const handleChange = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
-    setFormErrors((prev) => ({ ...prev, [name]: undefined }));
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    if (form.password !== form.confirmPassword) {
+      setError("Contraseñas no coinciden.");
+      return;
+    }
+    if (form.password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+    setLoading(true);
+    try {
+    } catch (err) {
+      setError("No se pudo realizar el registro.");
+    } finally {
+      setLoading(false);
+    }
   };
-  const fieldsWithOptions = useMemo(
-    () =>
-      fields.map((f) =>
-        f.type === "select" && f.optionsSource
-          ? { ...f, options: optionsMap[f.name] ?? [] }
-          : f,
-      ),
-    [optionsMap],
+  const fieldsWithOptions = fields.map((f) =>
+    f.type === "select" && f.optionsSource
+      ? { ...f, options: optionsMap[f.name] ?? [] }
+      : f,
   );
 
   return (
@@ -101,7 +148,11 @@ export default function RegisterPage() {
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
 
-          <Button type="submit" className="w-full justify-center">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full justify-center"
+          >
             Registrar
           </Button>
         </form>

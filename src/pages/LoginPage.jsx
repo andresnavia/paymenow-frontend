@@ -4,7 +4,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Waves } from "lucide-react";
 import { auth } from "../firebase";
 import Button from "../components/ui/Button";
-import RegisterPage from "./RegisterPage";
 
 const ERROR_MESSAGES = {
   "auth/invalid-email": "El correo no es válido.",
