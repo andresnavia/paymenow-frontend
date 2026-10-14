@@ -1,12 +1,12 @@
-import { NavLink } from 'react-router-dom'
-import { Waves, LogOut } from 'lucide-react'
-import { signOut } from 'firebase/auth'
-import { auth } from '../../firebase'
-import { useAuth } from '../../context/useAuth'
-import { NAV_ITEMS } from '../../nav'
+import { NavLink } from "react-router-dom";
+import { Waves, LogOut } from "lucide-react";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
+import { useAuth } from "../../context/useAuth";
+import { NAV_ITEMS } from "../../nav";
 
 export default function Sidebar() {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-navy-950 text-white lg:flex">
@@ -15,12 +15,14 @@ export default function Sidebar() {
           <Waves size={18} />
         </div>
         <div>
-          <p className="font-display text-lg leading-none text-white">PayMeNow</p>
+          <p className="font-display text-lg leading-none text-white">
+            PayMeNow
+          </p>
           <p className="text-xs text-brand-300">Cuentas de streaming</p>
         </div>
       </div>
 
-      <nav className="flex-1 space-y-1 px-3 py-2">
+      <nav className="flex-1 space-y-1 px-3 py-2 overflow-y-auto min-h-0 scrollbar-dark">
         {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
@@ -29,8 +31,8 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-brand-500 text-white'
-                  : 'text-brand-100/80 hover:bg-navy-900 hover:text-white'
+                  ? "bg-brand-500 text-white"
+                  : "text-brand-100/80 hover:bg-navy-900 hover:text-white"
               }`
             }
           >
@@ -52,5 +54,5 @@ export default function Sidebar() {
         </button>
       </div>
     </aside>
-  )
+  );
 }

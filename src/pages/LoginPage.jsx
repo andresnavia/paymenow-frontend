@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Waves } from "lucide-react";
 import { auth } from "../firebase";
@@ -20,7 +20,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const location = useLocation();
+  const registrado = location.state?.registrado;
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -44,7 +45,9 @@ export default function LoginPage() {
           </div>
           <h1 className="font-display text-xl text-navy-950">PayMeNow</h1>
           <p className="mt-1 text-sm text-ink/60">
-            Inicia sesión para continuar
+            {registrado
+              ? "Cuenta creada, inicia sesión"
+              : "Inicia sesión para continuar"}
           </p>
         </div>
 
@@ -88,7 +91,7 @@ export default function LoginPage() {
           </Button>
         </form>
         <div>
-          <Link to={"/register"}>¿No tienes Cuenta? Registrate</Link>
+          <Link to={"/register"}>¿No tienes cuenta? Regístrate</Link>
         </div>
       </div>
     </div>

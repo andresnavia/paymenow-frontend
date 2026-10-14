@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Waves } from "lucide-react";
 import Button from "../components/ui/Button";
 import tiposIdentificacionApi from "../api/tiposIdentificacion";
 import Field from "../components/ui/Field";
+import authApi from "../api/auth";
 const fields = [
   {
     name: "primerNombre",
@@ -77,7 +78,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [optionsMap, setOptionsMap] = useState({});
   const [form, setForm] = useState(() => emptyFormFrom(fields));
-
+  const navigate = useNavigate();
   useEffect(() => {
     const cargar = async () => {
       const entries = await Promise.all(
@@ -106,7 +107,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
     if (form.password !== form.confirmPassword) {
-      setError("Contraseñas no coinciden.");
+      setError("Las contraseñas no coinciden.");
       return;
     }
     if (form.password.length < 6) {
@@ -115,8 +116,15 @@ export default function RegisterPage() {
     }
     setLoading(true);
     try {
+      const { confirmPassword, ...payload } = form;
+      payload.idTiid = Number(payload.idTiid);
+      if (payload.fechaNacimiento === "") {
+        payload.fechaNacimiento = null;
+      }
+      await authApi.register(payload);
+      navigate("/login", { state: { registrado: true } });
     } catch (err) {
-      setError("No se pudo realizar el registro.");
+      setError(err.friendlyMessage || "No se pudo realizar el registro.");
     } finally {
       setLoading(false);
     }
@@ -157,7 +165,7 @@ export default function RegisterPage() {
           </Button>
         </form>
         <div>
-          <Link to="/login">¿Ya tienes Cuenta? Inicia Sesion</Link>
+          <Link to="/login">¿Ya tienes cuenta? Inicia sesión</Link>
         </div>
       </div>
     </div>

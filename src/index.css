@@ -32,4 +32,25 @@
   .label-field {
     @apply mb-1 block text-sm font-medium text-navy-900;
   }
+
+  /* Scrollbar delgada para fondos oscuros (navy). */
+  .scrollbar-dark::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-dark::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-navy-800;
+  }
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand-600;
+  }
+  /* Firefox no soporta los pseudo-elementos ::-webkit-scrollbar. */
+  @supports not selector(::-webkit-scrollbar) {
+    .scrollbar-dark {
+      scrollbar-width: thin;
+      scrollbar-color: theme("colors.navy.800") transparent;
+    }
+  }
 }

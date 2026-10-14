@@ -14,12 +14,15 @@ import ParametrosPage from "./pages/ParametrosPage";
 import RolesPage from "./pages/RolesPage";
 import UsuariosPage from "./pages/UsuariosPage";
 import RegisterPage from "./pages/RegisterPage";
+import GuestOnly from "./components/auth/GuestOnly";
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route element={<GuestOnly />}>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Route>
       <Route element={<RequireAuth />}>
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />

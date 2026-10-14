@@ -24,4 +24,5 @@ export const ENDPOINTS = {
   parametros: "/parametros",
   rol: "/roles",
   usuario: "/usuarios",
+  auth: "/auth",
 };
