@@ -35,8 +35,13 @@ const fields = [
 ];
 const columns = [
   { key: "idUsua", header: "ID" },
-  { key: "persona", header: "Persona" },
-  { key: "rol", header: "Rol" },
+  {
+    key: "persona",
+    header: "Persona",
+    render: (row) =>
+      [row.primerNombre, row.primerApellido].filter(Boolean).join(" "),
+  },
+  { key: "nombreRol", header: "Rol" },
   { key: "activo", header: "Activo" },
 ];
 
